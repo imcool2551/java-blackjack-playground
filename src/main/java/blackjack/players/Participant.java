@@ -4,7 +4,7 @@ import blackjack.card.Card;
 
 public interface Participant {
 
-    void startGame(Card card1, Card card2);
+    void add(Card card);
 
-    int total();
+    int result();
 }

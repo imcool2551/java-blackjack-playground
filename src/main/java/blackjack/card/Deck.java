@@ -15,7 +15,7 @@ public class Deck {
 
     private void initialize() {
         Arrays.stream(CardType.values())
-                .forEach(cardType -> addCardsOfType(cardType));
+                .forEach(this::addCardsOfType);
         Collections.shuffle(cards);
     }
 
@@ -27,7 +27,7 @@ public class Deck {
     //==비즈니스 로직==//
     public Card draw() {
         if (cards.isEmpty()) {
-            throw new IllegalStateException("there are no more cards to draw");
+            throw new IllegalStateException("there are no more cards left to draw");
         }
         return cards.pop();
     }
