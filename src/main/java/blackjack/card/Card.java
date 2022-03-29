@@ -1,6 +1,6 @@
 package blackjack.card;
 
-import java.util.*;
+import java.util.Objects;
 
 public class Card {
     private final CardType cardType;
@@ -14,6 +14,15 @@ public class Card {
 
     public static Card of(CardType cardType, CardNumber cardNumber) {
         return new Card(cardType, cardNumber);
+    }
+
+    //==비즈니스 로직==//
+    public int number() {
+        return cardNumber.getNumber();
+    }
+
+    public boolean isAce() {
+        return cardNumber.isAce();
     }
 
     //==공통 메서드==//
@@ -32,15 +41,6 @@ public class Card {
 
     @Override
     public String toString() {
-        return cardNumber.toString() + " " + cardType.toString();
-    }
-
-    //==비즈니스 로직==//
-    public int number() {
-        return cardNumber.getNumber();
-    }
-
-    public boolean isAce() {
-        return cardNumber.isAce();
+        return cardNumber.toString() + cardType.toString();
     }
 }
