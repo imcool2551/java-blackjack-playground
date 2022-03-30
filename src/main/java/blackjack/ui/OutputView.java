@@ -33,8 +33,14 @@ public class OutputView implements OutputReporter {
         printCurrentCardsOf(participant);
     }
 
-    public void printFinalCards(List<Participant> participants) {
-        participants.forEach(System.out::println);
+    @Override
+    public void reportMidGame(Participant dealer, List<Participant> players) {
+        printFinalCards(dealer);
+        players.forEach(System.out::println);
+    }
+
+    public void printFinalCards(Participant participant) {
+        System.out.println(participant);
     }
 
     private void printCurrentCardsOf(Participant participant) {

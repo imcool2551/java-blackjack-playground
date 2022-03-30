@@ -24,7 +24,13 @@ public class GameManager {
         this.outputReporter = outputReporter;
     }
 
-    public void initGame() {
+    public void startGame() {
+        init();
+        proceed();
+        finish();
+    }
+
+    private void init() {
         dealer.draw(deck.draw());
         dealer.draw(deck.draw());
 
@@ -36,17 +42,15 @@ public class GameManager {
         outputReporter.reportInit(dealer, players);
     }
 
-    public void giveExtraCards() {
+    private void proceed() {
         giveExtraCardsForPlayers();
         giveExtraCardsForDealer();
+
+        outputReporter.reportMidGame(dealer, players);
     }
 
-    private void giveExtraCardsForDealer() {
-        if (dealer.isFinished()) {
-            stayAndReport(dealer);
-            return;
-        }
-        drawAndReport(dealer);
+    private void finish() {
+
     }
 
     private void giveExtraCardsForPlayers() {
@@ -61,6 +65,14 @@ public class GameManager {
         });
     }
 
+    private void giveExtraCardsForDealer() {
+        if (dealer.isFinished()) {
+            stayAndReport(dealer);
+            return;
+        }
+        drawAndReport(dealer);
+    }
+
     private void drawAndReport(Participant participant) {
         participant.draw(deck.draw());
         outputReporter.reportCardsOf(participant);
@@ -69,9 +81,5 @@ public class GameManager {
     private void stayAndReport(Participant participant) {
         participant.stay();
         outputReporter.reportCardsOf(participant);
-    }
-
-    public Participant getDealer() {
-        return dealer;
     }
 }
