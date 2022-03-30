@@ -5,6 +5,7 @@ import blackjack.participants.OutputReporter;
 import blackjack.participants.Participant;
 
 import java.util.List;
+import java.util.Map;
 
 public class OutputView implements OutputReporter {
 
@@ -39,6 +40,15 @@ public class OutputView implements OutputReporter {
         players.forEach(System.out::println);
     }
 
+    @Override
+    public void reportResult(Map<Participant, Double> result) {
+        System.out.println();
+        System.out.println("##최종 수익");
+        result.forEach((participant, profit) -> {
+            System.out.println(participant.getName() + ": " + profit);
+        });
+    }
+
     public void printFinalCards(Participant participant) {
         System.out.println(participant);
     }
@@ -46,4 +56,6 @@ public class OutputView implements OutputReporter {
     private void printCurrentCardsOf(Participant participant) {
         System.out.println(participant.getName() + ": " + participant.cards());
     }
+
+
 }
