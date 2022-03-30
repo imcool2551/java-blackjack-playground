@@ -13,19 +13,22 @@ public class Player extends Participant {
 
     //==비즈니스 로직==//
     @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
     public boolean isFinished() {
         return state.isFinished();
     }
 
     @Override
-    public double profit(double battingPrice) {
-        return state.profit(battingPrice);
+    public double profit() {
+        return state.profit(battingPrice());
     }
 
     @Override
-    public String getName() {
-        return name;
+    public double battingPrice() {
+        return battingPrice;
     }
-
-
 }

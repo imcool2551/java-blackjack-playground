@@ -5,7 +5,7 @@ import blackjack.card.Cards;
 import blackjack.state.State;
 import blackjack.state.running.Hit;
 
-public abstract class Participant implements State {
+public abstract class Participant {
 
     protected State state;
 
@@ -15,21 +15,22 @@ public abstract class Participant implements State {
 
     public abstract String getName();
 
-    @Override
-    public State draw(Card card) {
-        this.state = this.state.draw(card);
-        return state;
-    }
+    public abstract boolean isFinished();
 
-    @Override
+    public abstract double profit();
+
+    public abstract double battingPrice();
+
     public Cards cards() {
         return state.cards();
     }
 
-    @Override
     public State stay() {
-        this.state = state.stay();
-        return state;
+        return state = state.stay();
+    }
+
+    public State draw(Card card) {
+        return state = state.draw(card);
     }
 
     @Override
@@ -40,4 +41,5 @@ public abstract class Participant implements State {
         sb.append(state.toString());
         return sb.toString();
     }
+
 }

@@ -16,7 +16,7 @@ public abstract class Running extends Started {
 
     @Override
     public double profit(double battingPrice) {
-        return 0;
+        throw new IllegalStateException();
     }
 
 }

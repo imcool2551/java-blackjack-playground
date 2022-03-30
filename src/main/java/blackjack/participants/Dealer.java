@@ -6,6 +6,11 @@ public class Dealer extends Participant {
 
     //==비즈니스 로직==//
     @Override
+    public String getName() {
+        return "딜러";
+    }
+
+    @Override
     public boolean isFinished() {
         if (cards().size() == 2 && cards().maxTotal() < DEALER_UPPER_BOUND) {
             return false;
@@ -14,12 +19,12 @@ public class Dealer extends Participant {
     }
 
     @Override
-    public double profit(double battingPrice) {
+    public double profit() {
         return 0;
     }
 
     @Override
-    public String getName() {
-        return "딜러";
+    public double battingPrice() {
+        return 0;
     }
 }

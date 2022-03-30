@@ -2,7 +2,10 @@ package blackjack.participants;
 
 import blackjack.card.Deck;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 public class GameManager {
 
@@ -50,9 +53,19 @@ public class GameManager {
     }
 
     private void finish() {
-
+        if (dealer.cards().isBlackJack()) {
+            outputReporter.reportResult(handleDealerBlackJack());
+            return;
+        }
+        if (dealer.cards().isBust()) {
+            outputReporter.reportResult(handleDealerBust());
+            return;
+        }
+        outputReporter.reportResult(handleDealerHit());
     }
 
+
+    //==카드 추가 로직==//
     private void giveExtraCardsForPlayers() {
         players.forEach(player -> {
             while (!player.isFinished()) {
@@ -81,5 +94,63 @@ public class GameManager {
     private void stayAndReport(Participant participant) {
         participant.stay();
         outputReporter.reportCardsOf(participant);
+    }
+
+    //==결과 계산 로직==//
+    private Map<Participant, Double> handleDealerBlackJack() {
+        Map<Participant, Double> profits = new HashMap<>();
+        addDrawerProfit(p -> p.cards().isBlackJack(), profits);
+        addLoserProfit(p -> !p.cards().isBlackJack(), profits);
+        addDealerProfit(profits);
+        return profits;
+    }
+
+    private Map<Participant, Double> handleDealerBust() {
+        Map<Participant, Double> profits = new HashMap<>();
+        addWinnerProfit(p -> !p.cards().isBust(), profits);
+        addLoserProfit(p -> p.cards().isBust(), profits);
+        addDealerProfit(profits);
+        return profits;
+    }
+
+    private Map<Participant, Double> handleDealerHit() {
+        Map<Participant, Double> profits = new HashMap<>();
+
+        int winnerNumber = Math.max(players.stream()
+                .filter(p -> !p.cards().isBust())
+                .mapToInt(p -> p.cards().maxTotal())
+                .max()
+                .orElse(0), dealer.cards().maxTotal());
+
+        addWinnerProfit(p -> p.cards().maxTotal() == winnerNumber, profits);
+        addLoserProfit(p -> p.cards().maxTotal() != winnerNumber, profits);
+        addDealerProfit(profits);
+        return profits;
+    }
+
+    private void addWinnerProfit(Predicate<Participant> winCondition, Map<Participant, Double> profits) {
+        players.stream()
+                .filter(winCondition)
+                .forEach(p -> profits.put(p, p.battingPrice()));
+    }
+
+    private void addDrawerProfit(Predicate<Participant> drawCondition, Map<Participant, Double> profits) {
+        players.stream()
+                .filter(drawCondition)
+                .forEach(p -> profits.put(p, 0d));
+    }
+
+    private void addLoserProfit(Predicate<Participant> loseCondition, Map<Participant, Double> profits) {
+        players.stream()
+                .filter(loseCondition)
+                .forEach(p -> profits.put(p, -p.battingPrice()));
+    }
+
+    private void addDealerProfit(Map<Participant, Double> profits) {
+        double playersTotalProfit = profits.values().stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
+
+        profits.put(dealer, -playersTotalProfit);
     }
 }
